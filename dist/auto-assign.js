@@ -35849,6 +35849,7 @@ function run() {
             info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
             info(`reviewersToAssign ${JSON.stringify(reviewersToAssign)}`);
             info(`sageUsers ${JSON.stringify(sageUsers)}`);
+            info(`reviewers ${JSON.stringify(reviewers)}`);
             info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
             if (reviewersToAssign.length === 0) {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);

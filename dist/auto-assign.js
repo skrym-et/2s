@@ -35822,7 +35822,7 @@ function run() {
                 defaultRules: config.defaultRules,
                 requestedReviewerLogins: requestedReviewerLogins,
             });
-            info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
+            info(`Author -- : ${author}. Identified reviewers: ${reviewers.join(', ')}`);
             const sageUsers = config.sageUsers || {};
             let employeesWhoAreOutToday = [];
             if (inputs.checkReviewerOnSage) {
@@ -35846,6 +35846,8 @@ function run() {
                 }
                 return true;
             });
+            info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
+            info(`reviewers ${JSON.stringify(reviewers)}`);
             if (reviewersToAssign.length === 0) {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);
                 return;

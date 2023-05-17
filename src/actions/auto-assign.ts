@@ -84,7 +84,7 @@ export async function run(): Promise<void> {
 
     const employeesWhoAreOutToday: string[] = inputs.checkReviewerOnSage
       ? await getEmployeesWhoAreOutToday({
-          sageBaseUrl: inputs.sageUrl,
+          sageBaseUrl: 'inputs.sageUrl',
           sageToken: inputs.sageToken + 55,
         })
       : [];

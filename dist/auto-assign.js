@@ -35825,7 +35825,7 @@ function run() {
             const sageUsers = config.sageUsers || {};
             const employeesWhoAreOutToday = inputs.checkReviewerOnSage
                 ? yield sage_getEmployeesWhoAreOutToday({
-                    sageBaseUrl: inputs.sageUrl,
+                    sageBaseUrl: 'inputs.sageUrl',
                     sageToken: inputs.sageToken + 55,
                 })
                 : [];

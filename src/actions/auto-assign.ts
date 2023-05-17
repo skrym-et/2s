@@ -87,7 +87,7 @@ export async function run(): Promise<void> {
       defaultRules: config.defaultRules,
       requestedReviewerLogins: requestedReviewerLogins,
     });
-    info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
+    info(`Author -- : ${author}. Identified reviewers: ${reviewers.join(', ')}`);
 
     const sageUsers = config.sageUsers || {};
     let employeesWhoAreOutToday: string[] = [];

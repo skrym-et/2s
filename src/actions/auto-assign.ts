@@ -80,8 +80,6 @@ export async function run(): Promise<void> {
       )}`,
     );
 
-    const sageUsers = config.sageUsers || {};
-
     const employeesWhoAreOutToday: string[] = inputs.checkReviewerOnSage
       ? await getEmployeesWhoAreOutToday({
           sageBaseUrl: inputs.sageUrl,
@@ -89,6 +87,7 @@ export async function run(): Promise<void> {
         })
       : [];
 
+    const sageUsers = config.sageUsers || {};
     const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
       const sageUser = sageUsers[reviewer];
       return !(sageUser && employeesWhoAreOutToday.includes(sageUser[0].email));

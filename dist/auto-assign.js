@@ -35703,19 +35703,26 @@ var sage_awaiter = (undefined && undefined.__awaiter) || function (thisArg, _arg
 
 function getEmployeesWhoAreOutToday({ sageBaseUrl, sageToken, }) {
     return sage_awaiter(this, void 0, void 0, function* () {
-        const client = sageClient({
-            sageBaseUrl,
-            sageToken,
-        });
-        const date = new Date().toISOString().split('T')[0];
-        const result = [];
-        const sageResponse = yield client(`leave-management/out-of-office-today?date=${date}`, 'GET');
-        if (sageResponse !== undefined && sageResponse.data.length > 0) {
-            sageResponse.data.forEach((response) => {
-                result.push(response.employee.email);
+        try {
+            const client = sageClient({
+                sageBaseUrl,
+                sageToken,
             });
+            const date = new Date().toISOString().split('T')[0];
+            const result = [];
+            const sageResponse = yield client(`leave-management/out-of-office-today?date=${date}`, 'GET');
+            if (sageResponse !== undefined && sageResponse.data.length > 0) {
+                sageResponse.data.forEach((response) => {
+                    result.push(response.employee.email);
+                });
+            }
+            info(`Employees reviewers who don't work today: ${result.join(', ')}`);
+            return result;
         }
-        return result;
+        catch (err) {
+            logger_warning('Sage Error: ' + JSON.stringify(err, null, 2));
+            return [];
+        }
     });
 }
 function sageClient({ sageBaseUrl, sageToken, }) {
@@ -35818,16 +35825,10 @@ function run() {
             const sageUsers = config.sageUsers || {};
             let employeesWhoAreOutToday = [];
             if (inputs.checkReviewerOnSage) {
-                try {
-                    employeesWhoAreOutToday = yield sage_getEmployeesWhoAreOutToday({
-                        sageBaseUrl: inputs.sageUrl,
-                        sageToken: inputs.sageToken,
-                    });
-                    info(`Employees reviewers who don't work today: ${employeesWhoAreOutToday.join(', ')}`);
-                }
-                catch (err) {
-                    logger_warning('Sage Error: ' + JSON.stringify(err, null, 2));
-                }
+                employeesWhoAreOutToday = yield sage_getEmployeesWhoAreOutToday({
+                    sageBaseUrl: inputs.sageUrl,
+                    sageToken: inputs.sageToken + 55,
+                });
             }
             const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
                 if (sageUsers[reviewer]) {

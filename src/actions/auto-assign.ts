@@ -84,20 +84,10 @@ export async function run(): Promise<void> {
     let employeesWhoAreOutToday: string[] = [];
 
     if (inputs.checkReviewerOnSage) {
-      try {
-        employeesWhoAreOutToday = await getEmployeesWhoAreOutToday({
-          sageBaseUrl: inputs.sageUrl,
-          sageToken: inputs.sageToken,
-        });
-
-        info(
-          `Employees reviewers who don't work today: ${employeesWhoAreOutToday.join(
-            ', ',
-          )}`,
-        );
-      } catch (err) {
-        warning('Sage Error: ' + JSON.stringify(err, null, 2));
-      }
+      employeesWhoAreOutToday = await getEmployeesWhoAreOutToday({
+        sageBaseUrl: inputs.sageUrl,
+        sageToken: inputs.sageToken + 55,
+      });
     }
 
     const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {

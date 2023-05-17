@@ -87,7 +87,7 @@ export async function run(): Promise<void> {
       defaultRules: config.defaultRules,
       requestedReviewerLogins: requestedReviewerLogins,
     });
-    info(`Author -- : ${author}. Identified reviewers: ${reviewers.join(', ')}`);
+    info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
 
     const sageUsers = config.sageUsers || {};
     let employeesWhoAreOutToday: string[] = [];
@@ -124,6 +124,7 @@ export async function run(): Promise<void> {
     info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
     info(`reviewersToAssign ${JSON.stringify(reviewersToAssign)}`);
     info(`sageUsers ${JSON.stringify(sageUsers)}`);
+    info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
 
     if (reviewersToAssign.length === 0) {
       info(`No reviewers were matched for author ${author}. Terminating the process`);

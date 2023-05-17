@@ -35841,10 +35841,6 @@ function run() {
                 requestedReviewerLogins: availableReviewersLogins,
             });
             info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
-            info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
-            info(`reviewersToAssign ${JSON.stringify(reviewers)}`);
-            info(`reviewers ${JSON.stringify(reviewers)}`);
-            info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
             if (reviewers.length === 0) {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);
                 return;

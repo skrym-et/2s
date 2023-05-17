@@ -35815,14 +35815,6 @@ function run() {
             });
             info(`Identified changed file groups: ${fileChangesGroups.join(', ')}`);
             info(`Identifying reviewers based on the changed files and PR creator. requestedReviewerLogins: ${JSON.stringify(requestedReviewerLogins)}`);
-            const reviewers = reviewer_identifyReviewers({
-                createdBy: author,
-                fileChangesGroups,
-                rulesByCreator: config.rulesByCreator,
-                defaultRules: config.defaultRules,
-                requestedReviewerLogins: requestedReviewerLogins,
-            });
-            info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
             const sageUsers = config.sageUsers || {};
             let employeesWhoAreOutToday = [];
             if (inputs.checkReviewerOnSage) {
@@ -35837,26 +35829,31 @@ function run() {
                     logger_warning('Sage Error: ' + JSON.stringify(err, null, 2));
                 }
             }
-            const reviewersToAssign = reviewers.filter((reviewer) => {
-                if (reviewer === author) {
-                    return false;
-                }
+            const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
                 if (sageUsers[reviewer]) {
                     return !employeesWhoAreOutToday.includes(sageUsers[reviewer][0].email);
                 }
                 return true;
             });
+            const reviewers = reviewer_identifyReviewers({
+                createdBy: author,
+                fileChangesGroups,
+                rulesByCreator: config.rulesByCreator,
+                defaultRules: config.defaultRules,
+                requestedReviewerLogins: availableReviewersLogins,
+            });
+            info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
             info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
-            info(`reviewersToAssign ${JSON.stringify(reviewersToAssign)}`);
+            info(`reviewersToAssign ${JSON.stringify(reviewers)}`);
             info(`sageUsers ${JSON.stringify(sageUsers)}`);
             info(`reviewers ${JSON.stringify(reviewers)}`);
             info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
-            if (reviewersToAssign.length === 0) {
+            if (reviewers.length === 0) {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);
                 return;
             }
-            yield assignReviewers(pr, reviewersToAssign);
-            info(`Requesting review to ${reviewersToAssign.join(', ')}`);
+            yield assignReviewers(pr, reviewers);
+            info(`Requesting review to ${reviewers.join(', ')}`);
             const messageId = (_c = (_b = config.options) === null || _b === void 0 ? void 0 : _b.withMessage) === null || _c === void 0 ? void 0 : _c.messageId;
             debug(`messageId: ${messageId}`);
             if (messageId) {
@@ -35867,7 +35864,7 @@ function run() {
                     fileChangesGroups,
                     rulesByCreator: config.rulesByCreator,
                     defaultRules: config.defaultRules,
-                    reviewersToAssign,
+                    reviewersToAssign: reviewers,
                 });
                 const body = `${messageId}\n\n${message}`;
                 if (existingCommentId) {

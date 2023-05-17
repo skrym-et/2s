@@ -80,15 +80,6 @@ export async function run(): Promise<void> {
       )}`,
     );
 
-    const reviewers = identifyReviewers({
-      createdBy: author,
-      fileChangesGroups,
-      rulesByCreator: config.rulesByCreator,
-      defaultRules: config.defaultRules,
-      requestedReviewerLogins: requestedReviewerLogins,
-    });
-    info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
-
     const sageUsers = config.sageUsers || {};
     let employeesWhoAreOutToday: string[] = [];
 
@@ -109,11 +100,7 @@ export async function run(): Promise<void> {
       }
     }
 
-    const reviewersToAssign = reviewers.filter((reviewer) => {
-      if (reviewer === author) {
-        return false;
-      }
-
+    const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
       if (sageUsers[reviewer]) {
         return !employeesWhoAreOutToday.includes(sageUsers[reviewer][0].email);
       }
@@ -121,19 +108,28 @@ export async function run(): Promise<void> {
       return true;
     });
 
+    const reviewers = identifyReviewers({
+      createdBy: author,
+      fileChangesGroups,
+      rulesByCreator: config.rulesByCreator,
+      defaultRules: config.defaultRules,
+      requestedReviewerLogins: availableReviewersLogins,
+    });
+    info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
+
     info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
-    info(`reviewersToAssign ${JSON.stringify(reviewersToAssign)}`);
+    info(`reviewersToAssign ${JSON.stringify(reviewers)}`);
     info(`sageUsers ${JSON.stringify(sageUsers)}`);
     info(`reviewers ${JSON.stringify(reviewers)}`);
     info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
 
-    if (reviewersToAssign.length === 0) {
+    if (reviewers.length === 0) {
       info(`No reviewers were matched for author ${author}. Terminating the process`);
       return;
     }
-    await github.assignReviewers(pr, reviewersToAssign);
+    await github.assignReviewers(pr, reviewers);
 
-    info(`Requesting review to ${reviewersToAssign.join(', ')}`);
+    info(`Requesting review to ${reviewers.join(', ')}`);
 
     const messageId = config.options?.withMessage?.messageId;
     debug(`messageId: ${messageId}`);
@@ -145,7 +141,7 @@ export async function run(): Promise<void> {
         fileChangesGroups,
         rulesByCreator: config.rulesByCreator,
         defaultRules: config.defaultRules,
-        reviewersToAssign,
+        reviewersToAssign: reviewers,
       });
       const body = `${messageId}\n\n${message}`;
       if (existingCommentId) {

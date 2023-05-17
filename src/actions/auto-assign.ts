@@ -120,6 +120,9 @@ export async function run(): Promise<void> {
 
       return true;
     });
+  
+    info('employeesWhoAreOutToday', JSON.stringify(employeesWhoAreOutToday))
+    info('reviewers', JSON.stringify(reviewers))
 
     if (reviewersToAssign.length === 0) {
       info(`No reviewers were matched for author ${author}. Terminating the process`);

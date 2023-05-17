@@ -35825,15 +35825,13 @@ function run() {
             const sageUsers = config.sageUsers || {};
             const employeesWhoAreOutToday = inputs.checkReviewerOnSage
                 ? yield sage_getEmployeesWhoAreOutToday({
-                    sageBaseUrl: inputs.sageUrl + 'dffd/ffd',
-                    sageToken: inputs.sageToken + 55,
+                    sageBaseUrl: inputs.sageUrl,
+                    sageToken: inputs.sageToken,
                 })
                 : [];
             const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
-                if (sageUsers[reviewer]) {
-                    return !employeesWhoAreOutToday.includes(sageUsers[reviewer][0].email);
-                }
-                return true;
+                const sageUser = sageUsers[reviewer];
+                return !(sageUser && employeesWhoAreOutToday.includes(sageUser[0].email));
             });
             const reviewers = reviewer_identifyReviewers({
                 createdBy: author,
@@ -35845,7 +35843,6 @@ function run() {
             info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
             info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
             info(`reviewersToAssign ${JSON.stringify(reviewers)}`);
-            info(`sageUsers ${JSON.stringify(sageUsers)}`);
             info(`reviewers ${JSON.stringify(reviewers)}`);
             info(`requestedReviewerLogins ${JSON.stringify(requestedReviewerLogins)}`);
             if (reviewers.length === 0) {

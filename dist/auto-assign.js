@@ -35847,7 +35847,8 @@ function run() {
                 return true;
             });
             info(`employeesWhoAreOutToday ${JSON.stringify(employeesWhoAreOutToday)}`);
-            info(`reviewers ${JSON.stringify(reviewers)}`);
+            info(`reviewersToAssign ${JSON.stringify(reviewersToAssign)}`);
+            info(`sageUsers ${JSON.stringify(sageUsers)}`);
             if (reviewersToAssign.length === 0) {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);
                 return;

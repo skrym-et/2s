@@ -81,14 +81,13 @@ export async function run(): Promise<void> {
     );
 
     const sageUsers = config.sageUsers || {};
-    let employeesWhoAreOutToday: string[] = [];
 
-    if (inputs.checkReviewerOnSage) {
-      employeesWhoAreOutToday = await getEmployeesWhoAreOutToday({
-        sageBaseUrl: inputs.sageUrl,
-        sageToken: inputs.sageToken + 55,
-      });
-    }
+    const employeesWhoAreOutToday: string[] = inputs.checkReviewerOnSage
+      ? await getEmployeesWhoAreOutToday({
+          sageBaseUrl: inputs.sageUrl,
+          sageToken: inputs.sageToken + 55,
+        })
+      : [];
 
     const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
       if (sageUsers[reviewer]) {

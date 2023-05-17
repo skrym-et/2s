@@ -35823,13 +35823,12 @@ function run() {
             info(`Identified changed file groups: ${fileChangesGroups.join(', ')}`);
             info(`Identifying reviewers based on the changed files and PR creator. requestedReviewerLogins: ${JSON.stringify(requestedReviewerLogins)}`);
             const sageUsers = config.sageUsers || {};
-            let employeesWhoAreOutToday = [];
-            if (inputs.checkReviewerOnSage) {
-                employeesWhoAreOutToday = yield sage_getEmployeesWhoAreOutToday({
+            const employeesWhoAreOutToday = inputs.checkReviewerOnSage
+                ? yield sage_getEmployeesWhoAreOutToday({
                     sageBaseUrl: inputs.sageUrl,
                     sageToken: inputs.sageToken + 55,
-                });
-            }
+                })
+                : [];
             const availableReviewersLogins = requestedReviewerLogins.filter((reviewer) => {
                 if (sageUsers[reviewer]) {
                     return !employeesWhoAreOutToday.includes(sageUsers[reviewer][0].email);

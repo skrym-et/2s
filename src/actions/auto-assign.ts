@@ -100,7 +100,7 @@ export async function run(): Promise<void> {
       defaultRules: config.defaultRules,
       requestedReviewerLogins: availableReviewersLogins,
     });
-    info(`Author: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
+    info(`Author11: ${author}. Identified reviewers: ${reviewers.join(', ')}`);
 
     if (reviewers.length === 0) {
       info(`No reviewers were matched for author ${author}. Terminating the process`);

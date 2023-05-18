@@ -35751,7 +35751,14 @@ function reviewer_identifyReviewersByDefaultRules({ byFileGroups, fileChangesGro
 function reviewer_identifyReviewers({ createdBy, rulesByCreator, fileChangesGroups, defaultRules, requestedReviewerLogins, }) {
     const rules = rulesByCreator[createdBy];
     if (!rules) {
-        info(`No rules for creator ${createdBy} were found.`);
+        info(`
+    No rules for creator ${createdBy} were found. ${JSON.stringify({
+            createdBy,
+            rulesByCreator,
+            fileChangesGroups,
+            defaultRules,
+            requestedReviewerLogins,
+        })}`);
         if (defaultRules) {
             info('Using default rules');
             return reviewer_identifyReviewersByDefaultRules({

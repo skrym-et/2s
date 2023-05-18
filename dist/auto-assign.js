@@ -35852,7 +35852,7 @@ function run() {
                 info(`No reviewers were matched for author ${author}. Terminating the process`);
                 return;
             }
-            info(`${JSON.stringify(pr, reviewers)}`);
+            info(`${JSON.stringify({ pr, reviewers })}`);
             yield assignReviewers(pr, reviewers);
             info(`Requesting review to ${reviewers.join(', ')}`);
             const messageId = (_c = (_b = config.options) === null || _b === void 0 ? void 0 : _b.withMessage) === null || _c === void 0 ? void 0 : _c.messageId;
